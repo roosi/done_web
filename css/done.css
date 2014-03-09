@@ -32,6 +32,7 @@
 
 .task-notes {
     margin-left: 6em;
+    min-height: 2em;
 }
 
 html, body {
