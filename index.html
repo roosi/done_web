@@ -20,7 +20,7 @@
         </a>
     </div>
     <div class="topcoat-navigation-bar__item center half">
-        <h1 class="topcoat-navigation-bar__title">task list name 1</h1>
+        <h1 class="topcoat-navigation-bar__title" data-bind="text: selectedTaskList"></h1>
     </div>
     <div class="topcoat-navigation-bar__item right quarter">
         <a class="topcoat-icon-button--quiet">
@@ -106,6 +106,7 @@ function TaskListsViewModel() {
         self.selectedTaskList(taskList);
     };
 
+    self.navigateToTaskList('task list 1');
 };
 
 ko.applyBindings(new TaskListsViewModel());
