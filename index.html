@@ -5,127 +5,56 @@
     <meta charset="utf-8">
     <title>done</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="css/topcoat-mobile-light.min.css">
-    <link rel="stylesheet" type="text/css" href="css/done.css">
+    <link rel="stylesheet" href="css/jquery.mobile-1.4.2.min.css">
     <script type="text/javascript" src="js/jquery-2.1.0.min.js"></script>
+    <script type="text/javascript" src="js/jquery.mobile-1.4.2.min.js"></script>
     <script type='text/javascript' src='js/knockout-3.1.0.js'></script>
 </head>
     
 <body>
-<div id="pages">
-<!--
-<div class="topcoat-navigation-bar" data-bind="with: tasks">
-    <div class="topcoat-navigation-bar__item left quarter">
-        <a id="slide-menu-button" class="topcoat-icon-button--quiet slide-menu-button">
-            <span class="topcoat-icon topcoat-icon--menu-stack"></span>
-        </a>
-    </div>
-    <div class="topcoat-navigation-bar__item center half">
-        <h1 class="topcoat-navigation-bar__title" data-bind="text: $root.selectedTaskList()"></h1>
-    </div>
-    <div class="topcoat-navigation-bar__item right quarter">
-        <a class="topcoat-icon-button--quiet">
-            <span class="topcoat-icon topcoat-icon--edit"></span>
-        </a>
-    </div>
-</div>
-<nav class="side-nav" data-bind="with: tasks">
-    <div class="topcoat-list__container side-nav__list__container">
-        <ul class="topcoat-list side-nav__list" data-bind="foreach: $root.taskLists">
-            <li class="topcoat-list__item side-nav__list__item"
-                data-bind="css: {selected: $data == $root.selectedTaskList()},
-                   click: $root.navigateToTaskList">
-                <a href="#" class="side-nav__button"
-                   data-bind="text: $data"></a>
-            </li>
-        </ul>
-    </div>
-</nav>
-<div class="main-content" data-bind="with: tasks">
-<div class="topcoat-list__container">
-    <ul class="topcoat-list" data-bind="foreach: $data">
-        <li class="topcoat-list__item" data-bind="click: $root.navigateToTask">
-            <img class="status-image" src="http://placehold.it/100x100">
-            <p class="status-date" data-bind="text: date"></p>
-            <p class="task-name" data-bind="text: name"></p>
-            <p class="task-notes" data-bind="text: notes"></p>
-        </li>
-    </ul>
-</div>
-</div>
--->
 
-<div data-bind="with: tasks">
-    <div class="topcoat-navigation-bar">
-        <div class="topcoat-navigation-bar__item left quarter">
-            <a class="topcoat-icon-button--quiet back-button" href="">
-                <span class="topcoat-icon topcoat-icon--back"></span>
-            </a>
-        </div>
-        <div class="topcoat-navigation-bar__item center half">
-            <select class="topcoat-select" data-bind="options: $root.taskLists,
-                               value: $root.selectedTaskList,
-                               optionsText: 'name'">
-            </select>
-        </div>
-    </div>
-    <div class="list-content topcoat-list__container">
-        <ul class="topcoat-list" data-bind="foreach: $data">
-            <li class="topcoat-list__item" data-bind="click: $root.navigateToTask">
+<div data-role="page" id="tasks">
+    <div data-role="header">
+        <h1>done</h1>
+    </div><!-- /header -->
+
+    <div data-role="content">
+        <ul data-role="listview" data-bind="foreach: tasks">
+            <li data-bind="click: $root.navigateToTask">
                 <img class="status-image" src="http://placehold.it/100x100">
                 <p class="status-date" data-bind="text: date"></p>
                 <p class="task-name" data-bind="text: name"></p>
                 <p class="task-notes" data-bind="text: notes"></p>
             </li>
         </ul>
-    </div>
+    </div><!-- /content -->
+
+    <div data-role="footer">
+        <h4>powered by Google</h4>
+    </div><!-- /footer -->
+
 </div>
 
-<div data-bind="with: selectedTask">
-    <div class="topcoat-navigation-bar">
-        <div class="topcoat-navigation-bar__item left quarter">
-            <a class="topcoat-icon-button--quiet back-button" href="">
-                <span class="topcoat-icon topcoat-icon--back"></span>
-            </a>
-        </div>
-        <div class="topcoat-navigation-bar__item center half">
-            <h1 class="topcoat-navigation-bar__title" data-bind="text: name"></h1>
-        </div>
-    </div>
-    <div class="task-content">
+<div data-role="page" id="task" data-bind="with: selectedTask" data-add-back-btn="true">
+    <div data-role="header">
+        <a href="#" data-icon="back" data-rel="back">Back</a>
+        <h1 data-bind="text: name"></h1>
+    </div><!-- /header -->
+
+    <div data-role="content">
         <img src="http://placehold.it/100x100">
         <p data-bind="text: name"></p>
         <p data-bind="text: date"></p>
         <p data-bind="text: notes"></p>
 
-        <input class="topcoat-text-input" data-bind="value: notes" style="width: 350px"></input>
-        <textarea class="topcoat-textarea" rows="3" cols="35" data-bind="text: notes"
-                  style="font-size: 1rem;line-height: 1rem;padding: 1rem;"></textarea>
+        <input data-bind="value: notes"></input>
+        <textarea data-bind="text: notes"></textarea>
     </div>
 </div>
 
-</div> <!-- End of pages -->
 </body>
     
 <script>
-/*
-window.onload = function () {
-    var slideMenuButton = document.getElementById('slide-menu-button');
-    slideMenuButton.onclick = function (e) {
-        console.log("menu:onclick");
-        toggleNavigationDrawer();
-    };
-}
-
-function toggleNavigationDrawer() {
-    var cl = document.body.classList;
-    if (cl.contains('left-nav')) {
-        cl.remove('left-nav');
-    } else {
-        cl.add('left-nav');
-    }
-}
-*/
 
 function TaskListsViewModel() {
     // model
@@ -147,19 +76,22 @@ function TaskListsViewModel() {
     // behaviours
     self.navigateToTaskList = function(taskList) {
         console.log("navigateToTaskList:" + taskList.name);
-        //self.selectedTaskList(taskList);
         self.tasks([
             { name: "Task name 1", date:"09.03.2014", notes: "Pellentesque est sem, posuere vitae tincidunt non, cursus ac massa." },
             { name: "Task name 2", date:"11.03.2014", notes: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin lacus felis, porttitor ut tincidunt eget, mattis viverra risus." },
-            { name: "Task name 3", date:"14.03.2014", notes: "" }
+            { name: "Task name 3", date:"14.03.2014", notes: "" },
+            { name: "Task name 4", date:"16.03.2014", notes: "" },
+            { name: "Task name 5", date:"17.03.2014", notes: "" },
+            { name: "Task name 6", date:"21.03.2014", notes: "" },
+            { name: "Task name 7", date:"21.03.2014", notes: "" }
         ]);
         self.selectedTask(null);
     };
 
     self.navigateToTask = function(task) {
         console.log("navigateToTask:" + task.name);
-        self.tasks(null);
         self.selectedTask(task);
+        $.mobile.navigate( "#task" );
     };
 
     self.navigateToTaskList({ name: 'task list 1'});
