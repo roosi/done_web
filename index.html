@@ -12,15 +12,16 @@
 </head>
     
 <body>
-
-<div class="topcoat-navigation-bar">
+<div id="pages">
+<!--
+<div class="topcoat-navigation-bar" data-bind="with: tasks">
     <div class="topcoat-navigation-bar__item left quarter">
         <a id="slide-menu-button" class="topcoat-icon-button--quiet slide-menu-button">
             <span class="topcoat-icon topcoat-icon--menu-stack"></span>
         </a>
     </div>
     <div class="topcoat-navigation-bar__item center half">
-        <h1 class="topcoat-navigation-bar__title" data-bind="text: selectedTaskList"></h1>
+        <h1 class="topcoat-navigation-bar__title" data-bind="text: $root.selectedTaskList()"></h1>
     </div>
     <div class="topcoat-navigation-bar__item right quarter">
         <a class="topcoat-icon-button--quiet">
@@ -28,9 +29,9 @@
         </a>
     </div>
 </div>
-<nav class="side-nav">
+<nav class="side-nav" data-bind="with: tasks">
     <div class="topcoat-list__container side-nav__list__container">
-        <ul class="topcoat-list side-nav__list" data-bind="foreach: taskLists">
+        <ul class="topcoat-list side-nav__list" data-bind="foreach: $root.taskLists">
             <li class="topcoat-list__item side-nav__list__item"
                 data-bind="css: {selected: $data == $root.selectedTaskList()},
                    click: $root.navigateToTaskList">
@@ -40,13 +41,11 @@
         </ul>
     </div>
 </nav>
-
-<div id="task-list-page" class="main-content" data-bind="with: Tasks">
+<div class="main-content" data-bind="with: tasks">
 <div class="topcoat-list__container">
     <ul class="topcoat-list" data-bind="foreach: $data">
-        <li class="topcoat-list__item">
+        <li class="topcoat-list__item" data-bind="click: $root.navigateToTask">
             <img class="status-image" src="http://placehold.it/100x100">
-
             <p class="status-date" data-bind="text: date"></p>
             <p class="task-name" data-bind="text: name"></p>
             <p class="task-notes" data-bind="text: notes"></p>
@@ -54,27 +53,63 @@
     </ul>
 </div>
 </div>
+-->
 
-<div id="task-page" class="main-content" style="display:none">
-    <img src="http://placehold.it/100x100">
-    <p>10.03</p>
-    <p>Task name 2</p>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin lacus felis, porttitor ut tincidunt eget, mattis viverra risus.</p>
+<div data-bind="with: tasks">
+    <div class="topcoat-navigation-bar">
+        <div class="topcoat-navigation-bar__item left quarter">
+            <a class="topcoat-icon-button--quiet back-button" href="">
+                <span class="topcoat-icon topcoat-icon--back"></span>
+            </a>
+        </div>
+        <div class="topcoat-navigation-bar__item center half">
+            <select class="topcoat-select" data-bind="options: $root.taskLists,
+                               value: $root.selectedTaskList,
+                               optionsText: 'name'">
+            </select>
+        </div>
+    </div>
+    <div class="list-content topcoat-list__container">
+        <ul class="topcoat-list" data-bind="foreach: $data">
+            <li class="topcoat-list__item" data-bind="click: $root.navigateToTask">
+                <img class="status-image" src="http://placehold.it/100x100">
+                <p class="status-date" data-bind="text: date"></p>
+                <p class="task-name" data-bind="text: name"></p>
+                <p class="task-notes" data-bind="text: notes"></p>
+            </li>
+        </ul>
+    </div>
 </div>
 
-<div id="about-page" class="main-content" style="display:none">
-<header><h1>About</h1></header>
-<footer>
-    <p class="title">Powered by Google</p>
-</footer>
+<div data-bind="with: selectedTask">
+    <div class="topcoat-navigation-bar">
+        <div class="topcoat-navigation-bar__item left quarter">
+            <a class="topcoat-icon-button--quiet back-button" href="">
+                <span class="topcoat-icon topcoat-icon--back"></span>
+            </a>
+        </div>
+        <div class="topcoat-navigation-bar__item center half">
+            <h1 class="topcoat-navigation-bar__title" data-bind="text: name"></h1>
+        </div>
+    </div>
+    <div class="task-content">
+        <img src="http://placehold.it/100x100">
+        <p data-bind="text: name"></p>
+        <p data-bind="text: date"></p>
+        <p data-bind="text: notes"></p>
+
+        <input class="topcoat-text-input" data-bind="value: notes" style="width: 350px"></input>
+        <textarea class="topcoat-textarea" rows="3" cols="35" data-bind="text: notes"
+                  style="font-size: 1rem;line-height: 1rem;padding: 1rem;"></textarea>
+    </div>
 </div>
 
-
+</div> <!-- End of pages -->
 </body>
     
 <script>
+/*
 window.onload = function () {
- 
     var slideMenuButton = document.getElementById('slide-menu-button');
     slideMenuButton.onclick = function (e) {
         console.log("menu:onclick");
@@ -90,27 +125,44 @@ function toggleNavigationDrawer() {
         cl.add('left-nav');
     }
 }
+*/
 
 function TaskListsViewModel() {
     // model
     var self = this;
     self.taskLists = ko.observableArray([
-        'task list 1', 'task list 2', 'task list 3', 'task list 4']);
+        { name: 'task list 1'}, { name: 'task list 2'}, { name: 'task list 3'}, { name: 'task list 4'}]);
     self.selectedTaskList = ko.observable();
-    self.Tasks = ko.observableArray();
+    self.tasks = ko.observableArray();
+    self.selectedTask = ko.observable();
+
+    self.selectedTaskList.subscribe(function(newValue) {
+        console.log("selectedTaskList:" + newValue.name);
+        if (newValue != self.selectedTaskList)
+        {
+            self.navigateToTaskList(newValue);
+        }
+    });
 
     // behaviours
     self.navigateToTaskList = function(taskList) {
-        console.log("navigateToTaskList:" + taskList);
-        self.selectedTaskList(taskList);
-        self.Tasks([
+        console.log("navigateToTaskList:" + taskList.name);
+        //self.selectedTaskList(taskList);
+        self.tasks([
             { name: "Task name 1", date:"09.03.2014", notes: "Pellentesque est sem, posuere vitae tincidunt non, cursus ac massa." },
             { name: "Task name 2", date:"11.03.2014", notes: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin lacus felis, porttitor ut tincidunt eget, mattis viverra risus." },
             { name: "Task name 3", date:"14.03.2014", notes: "" }
         ]);
+        self.selectedTask(null);
     };
 
-    self.navigateToTaskList('task list 1');
+    self.navigateToTask = function(task) {
+        console.log("navigateToTask:" + task.name);
+        self.tasks(null);
+        self.selectedTask(task);
+    };
+
+    self.navigateToTaskList({ name: 'task list 1'});
 };
 
 ko.applyBindings(new TaskListsViewModel());
