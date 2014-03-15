@@ -6,9 +6,13 @@
     <title>done</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="css/jquery.mobile-1.4.2.min.css">
+    <link rel="stylesheet" href="css/jqm-datebox.min.css">
     <link rel="stylesheet" href="css/done.css">
     <script type="text/javascript" src="js/jquery-2.1.0.min.js"></script>
     <script type="text/javascript" src="js/jquery.mobile-1.4.2.min.js"></script>
+    <script type="text/javascript" src="js/jqm-datebox.core.min.js"></script>
+    <script type="text/javascript" src="js/jqm-datebox.mode.calbox.min.js"></script>
+    <script type="text/javascript" src="js/jqm-datebox.mode.datebox.min.js"></script>
     <script type='text/javascript' src='js/knockout-3.1.0.js'></script>
 </head>
     
@@ -49,12 +53,9 @@
     </div><!-- /header -->
 
     <div data-role="content" class="task-content">
-        <img src="http://placehold.it/100x100">
-        <p data-bind="text: name"></p>
-        <p data-bind="text: date"></p>
-        <p data-bind="text: notes"></p>
-
-        <input data-bind="value: notes"></input>
+        <input data-bind="value: name"></input>
+        <input id="due-date" data-bind="value: date" type="date" data-role="datebox"
+               data-options='{"mode":"calbox","useFocus": true}'></input>
         <textarea data-bind="text: notes"></textarea>
     </div><!-- /content -->
 </div>
@@ -62,6 +63,40 @@
 </body>
     
 <script>
+ko.bindingHandlers.fadeVisible = {
+    update: function(element, valueAccessor) {
+        // On update, fade in/out
+        var shouldDisplay = valueAccessor();
+        shouldDisplay ? $(element).fadeIn() : $(element).fadeOut();
+    }
+};
+
+ko.bindingHandlers.jqmDateBox = {
+    update: function (element, valueAccessor, allBindingsAccessor, context) {
+        setTimeout(function () {
+            var value = valueAccessor();
+            var valueUnwrapped = ko.utils.unwrapObservable(value);
+            $(element).val(valueUnwrapped);
+            $(element).data('datebox').options.defaultPickerValue = valueUnwrapped;
+        }, 0);
+    }
+};
+
+ko.bindingHandlers['dateboxvalue'] = {
+  'init': function(element, valueAccessor, allBindingsAccessor, viewModel) {
+
+     ko.utils.registerEventHandler(element, "change", function () {
+       var value = valueAccessor();
+       value($(element).datebox('getTheDate'));
+  });
+},
+  'update': function (element, valueAccessor, allBindingsAccessor, context) {
+
+    $(element).datebox();
+    $(element).datebox('setTheDate', ko.utils.unwrapObservable(valueAccessor()));
+    $(element).trigger('datebox', {'method':'doset'});
+  }
+};
 
 function TaskListsViewModel() {
     // model
@@ -105,5 +140,6 @@ function TaskListsViewModel() {
 };
 
 ko.applyBindings(new TaskListsViewModel());
+
 </script>
 </html>
