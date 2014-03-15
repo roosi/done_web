@@ -6,6 +6,7 @@
     <title>done</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="css/jquery.mobile-1.4.2.min.css">
+    <link rel="stylesheet" href="css/done.css">
     <script type="text/javascript" src="js/jquery-2.1.0.min.js"></script>
     <script type="text/javascript" src="js/jquery.mobile-1.4.2.min.js"></script>
     <script type='text/javascript' src='js/knockout-3.1.0.js'></script>
@@ -14,8 +15,14 @@
 <body>
 
 <div data-role="page" id="tasks">
-    <div data-role="header">
-        <h1>done</h1>
+    <div data-role="header" data-position="inline">
+        <div style="text-align:center;">
+            <select name="select-choice-0" id="select-choice-0"
+                    data-bind="options: taskLists,
+                               optionsText: 'name',
+                               value: selectedTaskList">
+            </select>
+        </div>
     </div><!-- /header -->
 
     <div data-role="content">
@@ -41,7 +48,7 @@
         <h1 data-bind="text: name"></h1>
     </div><!-- /header -->
 
-    <div data-role="content">
+    <div data-role="content" class="task-content">
         <img src="http://placehold.it/100x100">
         <p data-bind="text: name"></p>
         <p data-bind="text: date"></p>
@@ -49,7 +56,7 @@
 
         <input data-bind="value: notes"></input>
         <textarea data-bind="text: notes"></textarea>
-    </div>
+    </div><!-- /content -->
 </div>
 
 </body>
@@ -86,15 +93,15 @@ function TaskListsViewModel() {
             { name: "Task name 7", date:"21.03.2014", notes: "" }
         ]);
         self.selectedTask(null);
+        $('#tasks').trigger('create');
     };
 
     self.navigateToTask = function(task) {
         console.log("navigateToTask:" + task.name);
         self.selectedTask(task);
         $.mobile.navigate( "#task" );
+        $('#task').trigger('create');
     };
-
-    self.navigateToTaskList({ name: 'task list 1'});
 };
 
 ko.applyBindings(new TaskListsViewModel());
