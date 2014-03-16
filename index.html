@@ -19,7 +19,7 @@
 <body>
 
 <div data-role="page" id="tasks">
-    <div data-role="header" data-position="inline">
+    <div data-role="header" data-position="fixed">
         <div style="text-align:center;">
             <select name="select-choice-0" id="select-choice-0"
                     data-bind="options: taskLists,
@@ -30,7 +30,7 @@
     </div><!-- /header -->
 
     <div data-role="content">
-        <ul data-role="listview" data-bind="foreach: tasks">
+        <ul data-role="listview" id="tasks-list" data-bind="foreach: tasks">
             <li data-bind="click: $root.navigateToTask">
                 <img class="status-image" src="http://placehold.it/100x100">
                 <p class="status-date" data-bind="text: date"></p>
@@ -40,8 +40,8 @@
         </ul>
     </div><!-- /content -->
 
-    <div data-role="footer">
-        <h4>powered by Google</h4>
+    <div data-id="tasks-footer" data-role="footer" data-position="fixed">
+        <h1>powered by Google</h1>
     </div><!-- /footer -->
 
 </div>
@@ -50,6 +50,8 @@
     <div data-role="header">
         <a href="#" data-icon="back" data-rel="back">Back</a>
         <h1 data-bind="text: name"></h1>
+        <button class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check">Save
+</button>
     </div><!-- /header -->
 
     <div data-role="content" class="task-content">
@@ -58,46 +60,20 @@
                data-options='{"mode":"calbox","useFocus": true}'></input>
         <textarea data-bind="text: notes"></textarea>
     </div><!-- /content -->
+
+    <div data-id="task-footer" data-role="footer" data-position="fixed" style="text-align:center;">
+        <div class="ui-nodisc-icon ui-alt-icon"><!-- Classes added to the wrapper -->
+            <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-delete ui-btn-icon-notext ui-btn-inline">Delete</a>
+            <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-plus ui-btn-icon-notext ui-btn-inline">Plus</a>
+            <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-minus ui-btn-icon-notext ui-btn-inline">Minus</a>
+            <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-check ui-btn-icon-notext ui-btn-inline">Check</a>
+        </div>
+    </div><!-- /footer -->
 </div>
 
 </body>
     
 <script>
-ko.bindingHandlers.fadeVisible = {
-    update: function(element, valueAccessor) {
-        // On update, fade in/out
-        var shouldDisplay = valueAccessor();
-        shouldDisplay ? $(element).fadeIn() : $(element).fadeOut();
-    }
-};
-
-ko.bindingHandlers.jqmDateBox = {
-    update: function (element, valueAccessor, allBindingsAccessor, context) {
-        setTimeout(function () {
-            var value = valueAccessor();
-            var valueUnwrapped = ko.utils.unwrapObservable(value);
-            $(element).val(valueUnwrapped);
-            $(element).data('datebox').options.defaultPickerValue = valueUnwrapped;
-        }, 0);
-    }
-};
-
-ko.bindingHandlers['dateboxvalue'] = {
-  'init': function(element, valueAccessor, allBindingsAccessor, viewModel) {
-
-     ko.utils.registerEventHandler(element, "change", function () {
-       var value = valueAccessor();
-       value($(element).datebox('getTheDate'));
-  });
-},
-  'update': function (element, valueAccessor, allBindingsAccessor, context) {
-
-    $(element).datebox();
-    $(element).datebox('setTheDate', ko.utils.unwrapObservable(valueAccessor()));
-    $(element).trigger('datebox', {'method':'doset'});
-  }
-};
-
 function TaskListsViewModel() {
     // model
     var self = this;
@@ -127,19 +103,22 @@ function TaskListsViewModel() {
             { name: "Task name 6", date:"21.03.2014", notes: "" },
             { name: "Task name 7", date:"21.03.2014", notes: "" }
         ]);
-        self.selectedTask(null);
-        $('#tasks').trigger('create');
     };
 
     self.navigateToTask = function(task) {
         console.log("navigateToTask:" + task.name);
         self.selectedTask(task);
-        $.mobile.navigate( "#task" );
+
+        $.mobile.changePage( "#task" );
+
         $('#task').trigger('create');
+        $('#tasks').trigger('create');
+
+        $('#due-date').trigger('datebox', {'method':'set', 'date':'11/03/2014', 'value':"11/03/2014"});
+        $('#due-date').trigger('datebox', {'method':'doset'});
     };
 };
 
 ko.applyBindings(new TaskListsViewModel());
-
 </script>
 </html>
