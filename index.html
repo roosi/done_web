@@ -33,9 +33,9 @@
         <ul data-role="listview" id="tasks-list" data-bind="foreach: tasks">
             <li><a data-bind="click: $root.navigateToTask">
                 <img src="img/status_needs_action.png" class="status-image ui-li-thumb">
-                <p class="status-date ui-li-aside" data-bind="text: date"></p>
                 <h2 class="task-item-name" data-bind="text: name"></h2>
                 <p class="task-item-notes" data-bind="text: notes"></p>
+                <p class="status-date" data-bind="text: date"></p>
             </a></li>
         </ul>
     </div><!-- /content -->
