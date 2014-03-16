@@ -14,19 +14,27 @@
     width: 100px;
 }
 
-.status-rectangle {
-    width: 5rem;
-    height: 5rem;
-}
-
 .status-date {
 }
 
-.task-name {
-
+.task-item-name {
 }
 
-.task-notes {
-
+.task-item-notes {
 }
 
+.task-header {
+    background-color: #00bfff !important;
+}
+
+.task-header-title1 {
+    color: #000000;
+}
+
+/*
+    <color name="status_new">#d3d3d3</color>
+    <color name="status_due">#ff0000</color>
+    <color name="status_due_closing">#ffa500</color>
+    <color name="status_completed">#008000</color>
+    <color name="status_needs_action">#00bfff</color>
+*/

@@ -33,9 +33,9 @@
         <ul data-role="listview" id="tasks-list" data-bind="foreach: tasks">
             <li><a data-bind="click: $root.navigateToTask">
                 <img src="img/status_needs_action.png" class="status-image ui-li-thumb">
-                <h2 class="task-name" data-bind="text: name"></h2>
                 <p class="status-date ui-li-aside" data-bind="text: date"></p>
-                <p class="task-notes" data-bind="text: notes"></p>
+                <h2 class="task-item-name" data-bind="text: name"></h2>
+                <p class="task-item-notes" data-bind="text: notes"></p>
             </a></li>
         </ul>
     </div><!-- /content -->
@@ -47,9 +47,9 @@
 </div>
 
 <div data-role="page" id="task" data-bind="with: selectedTask" data-add-back-btn="true">
-    <div data-role="header">
+    <div data-role="header" class="task-header">
         <a href="#" data-icon="back" data-rel="back">Back</a>
-        <h1 data-bind="text: name"></h1>
+        <h1 class="task-header-title" data-bind="text: name"></h1>
         <button class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check">Save
 </button>
     </div><!-- /header -->
