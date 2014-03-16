@@ -94,6 +94,7 @@ function TaskListsViewModel() {
     // behaviours
     self.navigateToTaskList = function(taskList) {
         console.log("navigateToTaskList:" + taskList.name);
+
         self.tasks([
             { name: "Task name 1", date:"09.03.2014", notes: "Pellentesque est sem, posuere vitae tincidunt non, cursus ac massa." },
             { name: "Task name 2", date:"11.03.2014", notes: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin lacus felis, porttitor ut tincidunt eget, mattis viverra risus." },
@@ -103,6 +104,9 @@ function TaskListsViewModel() {
             { name: "Task name 6", date:"21.03.2014", notes: "" },
             { name: "Task name 7", date:"21.03.2014", notes: "" }
         ]);
+
+        $('#tasks-list').listview();
+        $('#tasks-list').listview('refresh');
     };
 
     self.navigateToTask = function(task) {
