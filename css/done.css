@@ -33,6 +33,15 @@
     background-color: #00bfff !important;
 }
 
+.main-header {
+    background-color: #00bfff !important;
+}
+
+.main-menu {
+    min-width:5em;
+    padding:0.5em;
+}
+
 .task-header-title1 {
     color: #000000;
 }

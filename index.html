@@ -19,7 +19,7 @@
 <body>
 
 <div data-role="page" id="tasks">
-    <div data-role="header" data-position="fixed">
+    <div data-role="header" data-position="fixed" class="main-header">
         <div style="text-align:center;">
             <select name="select-choice-0" id="select-choice-0"
                     data-bind="options: taskLists,
@@ -27,6 +27,7 @@
                                value: selectedTaskList">
             </select>
         </div>
+        <button class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-plus">Add task</button>
     </div><!-- /header -->
 
     <div data-role="content">
@@ -42,6 +43,14 @@
 
     <div data-id="tasks-footer" data-role="footer" data-position="fixed">
         <h1>powered by Google</h1>
+        <a href="#popupMenu" data-rel="popup" data-role="button" data-icon="gear" data-iconpos="notext" class="ui-btn-right"></a>
+        <div data-role="popup" id="popupMenu">
+                <div class="main-menu">
+                    <button>Create new list</button>
+                    <button>Delete selected list</button>
+                    <button>Sign out</button>
+                </div>
+        </div>
     </div><!-- /footer -->
 
 </div>
