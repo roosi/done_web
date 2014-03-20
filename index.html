@@ -20,6 +20,15 @@
 
 <div data-role="page" id="tasks">
     <div data-role="header" data-position="fixed" class="main-header">
+                <a href="#popupMenu" data-rel="popup" class="ui-btn ui-shadow ui-corner-all ui-icon-gear ui-btn-icon-notext ui-btn-inline"></a>
+        <div data-role="popup" id="popupMenu">
+                <div class="main-menu">
+                    <button>Create new list</button>
+                    <button>Delete selected list</button>
+                    <button>Sign out</button>
+                    <button>About</button>
+                </div>
+        </div>
         <div style="text-align:center;">
             <select name="select-choice-0" id="select-choice-0"
                     data-bind="options: taskLists,
@@ -41,18 +50,6 @@
         </ul>
     </div><!-- /content -->
 
-    <div data-id="tasks-footer" data-role="footer" data-position="fixed">
-        <h1>powered by Google</h1>
-        <a href="#popupMenu" data-rel="popup" data-role="button" data-icon="gear" data-iconpos="notext" class="ui-btn-right"></a>
-        <div data-role="popup" id="popupMenu">
-                <div class="main-menu">
-                    <button>Create new list</button>
-                    <button>Delete selected list</button>
-                    <button>Sign out</button>
-                </div>
-        </div>
-    </div><!-- /footer -->
-
 </div>
 
 <div data-role="page" id="task" data-bind="with: selectedTask" data-add-back-btn="true">
@@ -73,8 +70,6 @@
     <div data-id="task-footer" data-role="footer" data-position="fixed" style="text-align:center;">
         <div class="ui-nodisc-icon ui-alt-icon"><!-- Classes added to the wrapper -->
             <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-delete ui-btn-icon-notext ui-btn-inline">Delete</a>
-            <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-plus ui-btn-icon-notext ui-btn-inline">Plus</a>
-            <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-minus ui-btn-icon-notext ui-btn-inline">Minus</a>
             <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-check ui-btn-icon-notext ui-btn-inline">Check</a>
         </div>
     </div><!-- /footer -->
