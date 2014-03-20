@@ -6,6 +6,8 @@
     <title>done</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="css/jquery.mobile-1.4.2.min.css">
+    <link rel="stylesheet" href="themes/done-theme.min.css" />
+    <link rel="stylesheet" href="themes/jquery.mobile.icons.min.css" />
     <link rel="stylesheet" href="css/jqm-datebox.min.css">
     <link rel="stylesheet" href="css/done.css">
     <script type="text/javascript" src="js/jquery-2.1.0.min.js"></script>
@@ -40,7 +42,7 @@
     </div><!-- /header -->
 
     <div data-role="content">
-        <ul data-role="listview" id="tasks-list" data-bind="foreach: tasks">
+        <ul data-role="listview" id="tasks-list" data-bind="foreach: tasks" data-theme="b">
             <li><a data-bind="click: $root.navigateToTask">
                 <img src="img/status_needs_action.png" class="status-image ui-li-thumb">
                 <h2 class="task-item-name" data-bind="text: name"></h2>
