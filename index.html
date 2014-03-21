@@ -46,12 +46,16 @@
         </div>
     </div><!-- /header -->
 
-    <div data-role="panel" data-position="left" data-display="overlay" id="tasklist-menu">
-        <p>menu</p>
-        <ul data-role="listview" id="tasks-list" data-bind="foreach: taskLists">
-            <li data-bind="
+    <div data-role="panel" data-position="left" data-display="overlay"
+         class="slidemenu" id="tasklist-menu">
+        <p style="color: #ffffff;">Task lists</p>
+        <ul data-role="listview"
+            id="tasks-list" data-bind="foreach: taskLists">
+            <li class="slidemenu-item"
+                data-bind="css: {selected: $data == $root.selectedTaskList()},
                      click: $root.navigateToTaskList">
                 <p data-bind="text: name"></p>
+                <span class=ui-li-count data-bind="text: size"></span>
             </li>
         </ul>
     </div> <!-- /panel -->
@@ -98,14 +102,11 @@
         <h1>About</h1>
     </div><!-- /header -->
 
-    <div data-role="content" class="basic-content">
-        <p>version 0.1</p>
+    <div data-role="content" class="about-content">
+        <h3>version 0.1</h3>
         <p>designed by JTN</p>
+        <p>powered by Google</p>
     </div><!-- /content -->
-
-    <div data-id="about-footer" data-role="footer" data-position="fixed" style="text-align:center;">
-        <h1>powered by Google</h1>
-    </div><!-- /footer -->
 </div>
 
 </body>
@@ -115,7 +116,10 @@ function TaskListsViewModel() {
     // model
     var self = this;
     self.taskLists = ko.observableArray([
-        { name: 'task list 1'}, { name: 'task list 2'}, { name: 'task list 3'}, { name: 'task list 4'}]);
+        { name: 'task list 1', size: 7},
+        { name: 'task list 2', size: 7},
+        { name: 'task list 3', size: 7},
+        { name: 'task list 4', size: 7}]);
     self.selectedTaskList = ko.observable();
     self.tasks = ko.observableArray();
     self.selectedTask = ko.observable();
