@@ -21,16 +21,10 @@
 <body>
 
 <div data-role="page" id="tasks">
-    <div data-role="header" data-position="fixed" class="main-header">
-                <a href="#popupMenu" data-rel="popup" class="ui-btn ui-shadow ui-corner-all ui-icon-action ui-btn-icon-notext ui-btn-inline"></a>
-        <div data-role="popup" id="popupMenu">
-                <div class="main-menu">
-                    <button>Create new list</button>
-                    <button>Delete selected list</button>
-                    <button>Sign out</button>
-                    <button data-bind="click: $root.navigateToAbout">About</button>
-                </div>
-        </div>
+    <div data-role="header" data-position="fixed" class="main-header"
+         data-bind="with: selectedTaskList">
+        <a href="#tasklist-menu" data-icon="bars" data-iconpos="notext"></a>
+        <!--
         <div style="text-align:center;">
             <select name="select-choice-0" id="select-choice-0"
                     data-bind="options: taskLists,
@@ -38,8 +32,29 @@
                                value: selectedTaskList">
             </select>
         </div>
-        <button class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-plus">Add task</button>
+        -->
+        <h1 data-bind="text: name"></h1>
+        <a href="#popupMenu" data-rel="popup" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-action ui-btn-icon-notext"></a>
+        <div data-role="popup" id="popupMenu">
+                <div class="main-menu">
+                    <button>Add task</button>
+                    <button>Create new list</button>
+                    <button>Delete selected list</button>
+                    <button>Sign out</button>
+                    <button data-bind="click: $root.navigateToAbout">About</button>
+                </div>
+        </div>
     </div><!-- /header -->
+
+    <div data-role="panel" data-position="left" data-display="overlay" id="tasklist-menu">
+        <p>menu</p>
+        <ul data-role="listview" id="tasks-list" data-bind="foreach: taskLists">
+            <li data-bind="
+                     click: $root.navigateToTaskList">
+                <p data-bind="text: name"></p>
+            </li>
+        </ul>
+    </div> <!-- /panel -->
 
     <div data-role="content">
         <ul data-role="listview" id="tasks-list" data-bind="foreach: tasks" data-theme="b">
@@ -105,6 +120,7 @@ function TaskListsViewModel() {
     self.tasks = ko.observableArray();
     self.selectedTask = ko.observable();
 
+    /*
     self.selectedTaskList.subscribe(function(newValue) {
         console.log("selectedTaskList:" + newValue.name);
         if (newValue != self.selectedTaskList)
@@ -112,10 +128,12 @@ function TaskListsViewModel() {
             self.navigateToTaskList(newValue);
         }
     });
+    */
 
     // behaviours
     self.navigateToTaskList = function(taskList) {
         console.log("navigateToTaskList:" + taskList.name);
+        self.selectedTaskList(taskList);
 
         self.tasks([
             { name: "Task name 1", date:"09.03.2014", notes: "Pellentesque est sem, posuere vitae tincidunt non, cursus ac massa." },
@@ -127,8 +145,10 @@ function TaskListsViewModel() {
             { name: "Task name 7", date:"21.03.2014", notes: "" }
         ]);
 
-        $('#tasks-list').listview();
-        $('#tasks-list').listview('refresh');
+        $('#tasks').trigger('create');
+        $( "#tasklist-menu" ).panel( "close" );
+        //$('#tasks-list').listview();
+        //$('#tasks-list').listview('refresh');
     };
 
     self.navigateToTask = function(task) {
@@ -148,6 +168,11 @@ function TaskListsViewModel() {
         console.log("navigateToAbout");
         $.mobile.changePage("#about")
     }
+
+    var first = ko.utils.arrayFirst(self.taskLists(), function(taskList) {
+        return taskList;
+    });
+    self.navigateToTaskList(first);
 };
 
 ko.applyBindings(new TaskListsViewModel());
