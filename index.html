@@ -16,10 +16,7 @@
     <script type="text/javascript" src="js/jqm-datebox.mode.calbox.min.js"></script>
     <script type="text/javascript" src="js/jqm-datebox.mode.datebox.min.js"></script>
     <script type='text/javascript' src='js/knockout-3.1.0.js'></script>
-    <!--
-    <script src="https://apis.google.com/js/client.js"></script>
-    https://developers.google.com/compute/docs/api/javascript-guide
-    -->
+    <script type="text/javascript" src="js/apis.google.client.js"></script>
 </head>
     
 <body>
@@ -233,6 +230,7 @@ function handleListTasklists(response) {
     }
     //taskListsViewModel.navigateToTaskList(taskListsViewModel.taskLists()[0]);
 }
+    
+$(window).load(handleClientLoad);
 </script>
-<script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
 </html>
