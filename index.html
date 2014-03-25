@@ -16,6 +16,10 @@
     <script type="text/javascript" src="js/jqm-datebox.mode.calbox.min.js"></script>
     <script type="text/javascript" src="js/jqm-datebox.mode.datebox.min.js"></script>
     <script type='text/javascript' src='js/knockout-3.1.0.js'></script>
+    <!--
+    <script src="https://apis.google.com/js/client.js"></script>
+    https://developers.google.com/compute/docs/api/javascript-guide
+    -->
 </head>
     
 <body>
@@ -179,6 +183,56 @@ function TaskListsViewModel() {
     self.navigateToTaskList(first);
 };
 
-ko.applyBindings(new TaskListsViewModel());
+var taskListsViewModel = new TaskListsViewModel();
+ko.applyBindings(taskListsViewModel);
+
+var clientId = '552948890600-80ven44ljv5a8kgsl635lk6go9i6e8j3.apps.googleusercontent.com';
+
+var apiKey = 'AIzaSyC2H3GyP4x_cOyXvMSuQiNlGU7keWGpPFo';
+
+var scopes = 'https://www.googleapis.com/auth/tasks';
+
+function handleClientLoad() {
+    console.log("handleClientLoad");
+
+    gapi.client.setApiKey(apiKey);
+    window.setTimeout(checkAuth,1);
+}
+
+function checkAuth() {
+    console.log("checkAuth");
+    gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: true},  handleAuthResult);
+}
+
+function handleAuthResult(authResult) {
+    console.log("handleAuthResult");
+    if (authResult && !authResult.error) {
+        listTasklists();
+    } else {
+        gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false}, handleAuthResult);
+    }
+}
+
+function listTasklists() {
+    gapi.client.request({
+      'path': '/tasks/v1/users/@me/lists',
+      'callback': handleListTasklists
+    });
+}
+
+function handleListTasklists(response) {
+    var tasklists = response && response.items;
+    if (!tasklists || !tasklists.length) { throw('no tasklists'); }
+
+    /*
+    Object {kind: "tasks#taskList", id: "MDU5NTIzNzI1NTgzNjE3ODc1MzI6MDow", title: "JT N's list", updated: "2014-03-13T00:37:49.000Z", selfLink: "https://www.googleapis.com/tasks/v1/users/@me/lists/MDU5NTIzNzI1NTgzNjE3ODc1MzI6MDow"}
+    */
+    for (var i=0; i<tasklists.length; i++)
+    {
+        console.log(tasklists[0]);
+    }
+    //taskListsViewModel.navigateToTaskList(taskListsViewModel.taskLists()[0]);
+}
 </script>
+<script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
 </html>
