@@ -34,7 +34,7 @@
             </select>
         </div>
         -->
-        <h1 data-bind="text: name"></h1>
+        <h1 data-bind="text: title"></h1>
         <a href="#popupMenu" data-rel="popup" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-action ui-btn-icon-notext"></a>
         <div data-role="popup" id="popupMenu">
                 <div class="main-menu">
@@ -55,8 +55,10 @@
             <li class="slidemenu-item"
                 data-bind="css: {selected: $data == $root.selectedTaskList()},
                      click: $root.navigateToTaskList">
-                <p data-bind="text: name"></p>
+                <p data-bind="text: title"></p>
+                <!--
                 <span class=ui-li-count data-bind="text: size"></span>
+-->
             </li>
         </ul>
     </div> <!-- /panel -->
@@ -65,9 +67,11 @@
         <ul data-role="listview" id="tasks-list" data-bind="foreach: tasks" data-theme="b">
             <li><a data-bind="click: $root.navigateToTask">
                 <img src="img/status_needs_action.png" class="status-image ui-li-thumb">
-                <h2 class="task-item-name" data-bind="text: name"></h2>
+                <h2 class="task-item-name" data-bind="text: title"></h2>
+                <!--
                 <p class="task-item-notes" data-bind="text: notes"></p>
-                <p class="status-date" data-bind="text: date"></p>
+-->
+                <p class="status-date" data-bind="text: due"></p>
             </a></li>
         </ul>
     </div><!-- /content -->
@@ -83,8 +87,8 @@
     </div><!-- /header -->
 
     <div data-role="content" class="basic-content">
-        <input data-bind="value: name"></input>
-        <input id="due-date" data-bind="value: date" type="date" data-role="datebox"
+        <input data-bind="value: title"></input>
+        <input id="due-date" data-bind="value: due" type="date" data-role="datebox"
                data-options='{"mode":"calbox","useFocus": true}'></input>
         <textarea data-bind="text: notes"></textarea>
     </div><!-- /content -->
@@ -116,11 +120,14 @@
 function TaskListsViewModel() {
     // model
     var self = this;
+    /*
     self.taskLists = ko.observableArray([
         { name: 'task list 1', size: 7},
         { name: 'task list 2', size: 7},
         { name: 'task list 3', size: 7},
         { name: 'task list 4', size: 7}]);
+    */
+    self.taskLists = ko.observableArray();
     self.selectedTaskList = ko.observable();
     self.tasks = ko.observableArray();
     self.selectedTask = ko.observable();
@@ -137,9 +144,10 @@ function TaskListsViewModel() {
 
     // behaviours
     self.navigateToTaskList = function(taskList) {
-        console.log("navigateToTaskList:" + taskList.name);
+        console.log("navigateToTaskList:" + taskList.title);
         self.selectedTaskList(taskList);
 
+        /*
         self.tasks([
             { name: "Task name 1", date:"09.03.2014", notes: "Pellentesque est sem, posuere vitae tincidunt non, cursus ac massa." },
             { name: "Task name 2", date:"11.03.2014", notes: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin lacus felis, porttitor ut tincidunt eget, mattis viverra risus." },
@@ -149,12 +157,38 @@ function TaskListsViewModel() {
             { name: "Task name 6", date:"21.03.2014", notes: "" },
             { name: "Task name 7", date:"21.03.2014", notes: "" }
         ]);
+        */
+
+        gapi.client.request({
+            'path': '/tasks/v1/lists/' + taskList.id + '/tasks',
+            'callback': self.handleListTasks
+        });
 
         $('#tasks').trigger('create');
+        $('#tasklist-menu').trigger('create');
+        $('#tasks-list').trigger('create');
+
+        /*
+        $('#tasklist-menu').trigger('create');
+        $('#tasks-list').trigger('create');
+
         $( "#tasklist-menu" ).panel( "close" );
-        //$('#tasks-list').listview();
-        //$('#tasks-list').listview('refresh');
+        $('#tasks-list').listview();
+        $('#tasks-list').listview('refresh');
+        */
     };
+
+    self.handleListTasks = function(response) {
+        var tasks = response && response.items;
+        if (!tasks || !tasks.length) { throw('no tasks'); }
+
+        for (var i=0; i<tasks.length; i++)
+        {
+            console.log(tasks[i]);
+        //taskListsViewModel.taskLists.push(tasklists[i])
+        }
+        self.tasks(tasks);
+    }
 
     self.navigateToTask = function(task) {
         console.log("navigateToTask:" + task.name);
@@ -177,7 +211,7 @@ function TaskListsViewModel() {
     var first = ko.utils.arrayFirst(self.taskLists(), function(taskList) {
         return taskList;
     });
-    self.navigateToTaskList(first);
+    //self.navigateToTaskList(first);
 };
 
 var taskListsViewModel = new TaskListsViewModel();
@@ -224,11 +258,14 @@ function handleListTasklists(response) {
     /*
     Object {kind: "tasks#taskList", id: "MDU5NTIzNzI1NTgzNjE3ODc1MzI6MDow", title: "JT N's list", updated: "2014-03-13T00:37:49.000Z", selfLink: "https://www.googleapis.com/tasks/v1/users/@me/lists/MDU5NTIzNzI1NTgzNjE3ODc1MzI6MDow"}
     */
+    //taskListsViewModel.taskLists.removeAll();
     for (var i=0; i<tasklists.length; i++)
     {
-        console.log(tasklists[0]);
+        console.log(tasklists[i]);
+        //taskListsViewModel.taskLists.push(tasklists[i])
     }
-    //taskListsViewModel.navigateToTaskList(taskListsViewModel.taskLists()[0]);
+    taskListsViewModel.taskLists(tasklists);
+    taskListsViewModel.navigateToTaskList(taskListsViewModel.taskLists()[0]);
 }
     
 $(window).load(handleClientLoad);
